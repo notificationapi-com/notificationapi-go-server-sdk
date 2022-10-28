@@ -1,4 +1,4 @@
-module github.com/notificationapi-com/notificationapi-php-server-sdk
+module github.com/notificationapi-com/notificationapi-go-server-sdk
 
 go 1.19
 
