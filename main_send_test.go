@@ -73,7 +73,17 @@ func TestSendFailsWith500(t *testing.T) {
 }
 func TestSendPasses(t *testing.T) {
     Init(client_id,client_secret)
-    params:= SendRequest{NotificationId: "baz",User:User{Id: "asd"}}
+    orders:= []interface{}{
+        map[string]string{"id": "123", "productName": "hasan"},
+        map[string]string{"id": "124", "productName": "socks"},
+    }
+    
+    mergeTags := map[string]interface{}{
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "orders": orders,
+    }
+    params:= SendRequest{NotificationId: "baz",User:User{Id: "asd"},MergeTags: mergeTags}
     jsonData, _ := json.Marshal(params)
     httpmock.Activate()
     defer httpmock.DeactivateAndReset()
