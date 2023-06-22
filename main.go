@@ -22,15 +22,48 @@ type SendRequestEmailOptions struct {
 		BccAddresses []string `json:"bccAddresses,omitempty"`
 		Attachments []EmailAttachments `json:"attachments,omitempty"`
 }
+type SendRequestApnOptions struct{
+	Expiry *string `json:"expiry,omitempty"`
+	Priority *int  `json:"priority,omitempty"`
+	CollapseId *string `json:"collapseId,omitempty"`
+	ThreadId *string `json:"threadId,omitempty"`
+	Badge *int `json:"badge,omitempty"`
+	Sound *string `json:"sound,omitempty"`
+	ContentAvailable *bool `json:"contentAvailable,omitempty"`
+}
+type FcmAndroidOptions struct{
+	CollapseKey *string `json:"collapseKey,omitempty"`
+	Priority *string `json:"priority,omitempty"`
+	Ttl *int `json:"ttl,omitempty"`
+	RestrictedPackageName *string `json:"restrictedPackageName,omitempty"`
+}
+type SendRequestFcmOptions struct{
+	Android *FcmAndroidOptions `json:"android,omitempty"`
+}
 type SendRequestOptions struct {
-	Email SendRequestEmailOptions `json:"email,omitempty"`
+	Email *SendRequestEmailOptions `json:"email,omitempty"`
+	Apn *SendRequestApnOptions `json:"apn,omitempty"`
+	Fcm *SendRequestFcmOptions  `json:"fcm,omitempty"`
+}
+type UserPushTokenDevice struct{
+	App_id *string `json:"app_id,omitempty"`
+	Ad_id *string `json:"ad_id,omitempty"`
+	Device_id *string `json:"device_id,omitempty"`
+	Platform *string `json:"platform,omitempty"`
+	Manufacturer *string `json:"manufacturer,omitempty"`
+	Model *string `json:"model,omitempty"`
+}
+type UserPushToken struct{
+	Type *string `json:"type,omitempty"`
+	Token *string `json:"token,omitempty"`
+	Device *UserPushTokenDevice `json:"device,omitempty"`
 }
 type User struct{
 	Id string `json:"id,omitempty"`
 	Email string `json:"email,omitempty"`
-	Number string `json:"number,omitempty"`
+	Number *string `json:"number,omitempty"`
+	PushTokens *[]UserPushToken `json:"pushTokens,omitempty"`
   }
-
 type SendRequest struct {
 	NotificationId  string `json:"notificationId,omitempty"`
 	User  User `json:"user,omitempty"`
