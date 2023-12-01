@@ -13,8 +13,8 @@ import (
 	"net/url"
 	"time"
 )
-  
-  var __client_id,__client_secret string;  
+
+  var __client_id,__client_secret string;
   type EmailAttachments struct {
 	  Filename string `json:"filename,omitempty"`
 	  Url string `json:"url,omitempty"`
@@ -61,12 +61,23 @@ import (
 	  Token *string `json:"token,omitempty"`
 	  Device *UserPushTokenDevice `json:"device,omitempty"`
   }
-  type User struct{
-	  Id string `json:"id,omitempty"`
-	  Email string `json:"email,omitempty"`
-	  Number *string `json:"number,omitempty"`
-	  PushTokens *[]UserPushToken `json:"pushTokens,omitempty"`
-	}
+  type UserWebPushToken struct {
+	Sub struct {
+		Endpoint string `json:"endpoint,omitempty"`
+		Keys     struct {
+			P256DH string `json:"p256dh,omitempty"`
+			Auth   string `json:"auth,omitempty"`
+		} `json:"keys,omitempty"`
+	} `json:"sub,omitempty"`
+}
+
+  type User struct {
+	Id          string            `json:"id,omitempty"`
+	Email       string            `json:"email,omitempty"`
+	Number      *string           `json:"number,omitempty"`
+	PushTokens  *[]UserPushToken  `json:"pushTokens,omitempty"`
+	WebPushTokens *[]UserWebPushToken `json:"webPushTokens,omitempty"` // Added WebPushTokens
+}
   type SendRequest struct {
 	  NotificationId  string `json:"notificationId,omitempty"`
 	  User  User `json:"user,omitempty"`
@@ -111,7 +122,7 @@ import (
 	  __client_id = client_id
 	  __client_secret= client_secret
   return nil
-  
+
   }
   func basicAuth(client_id, client_secret string) string {
 	  auth := client_id + ":" + client_secret
@@ -127,7 +138,7 @@ import (
 	  if err != nil {
 		  return fmt.Errorf("error occurred while creating request: %w", err)
 	  }
-  
+
 	  authHeader := "Basic " + basicAuth(__client_id, __client_secret)
 	  if len(customAuthorization) > 0 {
 		  authHeader = customAuthorization[0]
@@ -137,25 +148,25 @@ import (
 	  if err != nil {
 		  log.Fatalf("Error sending request to API endpoint. %+v", err)
 	  }
-  
+
 	  // Close the connection to reuse it
 	  defer response.Body.Close()
-  
+
 	  if err != nil {
 		  log.Fatalf("Couldn't parse response body. %+v", err)
 	  }
 	  if response.StatusCode==202 {
 		  fmt.Printf("NotificationAPI request ignored.")
 	  }
-  
+
 	  if response.StatusCode==500 {
 		  return errors.New("NotificationAPI request failed.")
 	  }
-  
+
 	  return nil
-  
+
   }
-  
+
   func Send(params SendRequest) error{
 	  c := httpClient()
 	  sendRequest, err := json.Marshal(params)
@@ -180,7 +191,7 @@ import (
 	  }
 	  return request(c, http.MethodPut,  "notifications/"+params.NotificationId+"/subNotifications/"+params.SubNotificationId,bytes.NewBuffer(createSubNotificationRequest))
 	}
-	
+
 	func DeleteSubNotification(params DeleteSubNotificationRequest) error{
 	  c := httpClient()
 	  return  request(c, http.MethodDelete,  "notifications/"+params.NotificationId+"/subNotifications/"+params.SubNotificationId,bytes.NewBuffer(nil))
@@ -199,16 +210,16 @@ import (
 	  h := hmac.New(sha256.New, []byte(__client_secret))
 	  h.Write([]byte(user.Id))
 	  hashedUserID := base64.StdEncoding.EncodeToString(h.Sum(nil))
-  
+
 	  // Construct custom authorization header
 	  customAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s:%s", __client_id, user.Id, hashedUserID)))
-  
+
 	  userData := UserData{
 		  Email:      &user.Email,
 		  Number:     user.Number,
 		  PushTokens: user.PushTokens,
 	  }
-  
+
 	  data, err := json.Marshal(userData)
 	  if err != nil {
 		  return fmt.Errorf("error marshalling user data: %w", err)
