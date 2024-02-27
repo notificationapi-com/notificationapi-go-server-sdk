@@ -79,14 +79,15 @@ import (
 	WebPushTokens *[]UserWebPushToken `json:"webPushTokens,omitempty"` // Added WebPushTokens
 }
   type SendRequest struct {
-	  NotificationId  string `json:"notificationId,omitempty"`
-	  User  User `json:"user,omitempty"`
-	  MergeTags  map[string]interface{} `json:"mergeTags,omitempty"`
-	  Replace map[string]string `json:"replace,omitempty"`
-	  ForceChannels  []string `json:"forceChannels,omitempty"`
-	  TemplateId  string `json:"templateId,omitempty"`
-	  SubNotificationId string `json:"subNotificationId,omitempty"`
-	  Options *SendRequestOptions `json:"options,omitempty"`
+	  NotificationId     string                `json:"notificationId"`
+	  User              User                   `json:"user"`
+	  MergeTags         map[string]interface{} `json:"mergeTags,omitempty"`
+	  Replace           map[string]string      `json:"replace,omitempty"`
+	  ForceChannels     []string               `json:"forceChannels,omitempty"`
+	  Schedule          *string                `json:"schedule,omitempty"`
+	  TemplateID        *string                `json:"templateId,omitempty"`
+	  SubNotificationId *string                `json:"subNotificationId,omitempty"`
+	  Options           *SendRequestOptions    `json:"options,omitempty"`
   }
   type RetractRequest struct {
 	  NotificationId  string `json:"notificationId,omitempty"`
