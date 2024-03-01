@@ -85,7 +85,7 @@ type SendRequest struct {
 	MergeTags         map[string]interface{} `json:"mergeTags,omitempty"`
 	Replace           map[string]string      `json:"replace,omitempty"`
 	ForceChannels     []string               `json:"forceChannels,omitempty"`
-	Schedule          string                `json:"schedule,omitempty"`
+	Schedule          string                 `json:"schedule,omitempty"`
 	TemplateID        *string                `json:"templateId,omitempty"`
 	SubNotificationId *string                `json:"subNotificationId,omitempty"`
 	Options           *SendRequestOptions    `json:"options,omitempty"`
@@ -96,7 +96,7 @@ type UpdateScheduleRequest struct {
 	MergeTags         map[string]interface{} `json:"mergeTags,omitempty"`
 	Replace           map[string]string      `json:"replace,omitempty"`
 	ForceChannels     []string               `json:"forceChannels,omitempty"`
-	Schedule          string                `json:"schedule,omitempty"`
+	Schedule          string                 `json:"schedule,omitempty"`
 	TemplateID        *string                `json:"templateId,omitempty"`
 	SubNotificationId *string                `json:"subNotificationId,omitempty"`
 	Options           *SendRequestOptions    `json:"options,omitempty"`

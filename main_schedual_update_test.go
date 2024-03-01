@@ -36,7 +36,7 @@ func TestUpdateSchedulePassesWith202(t *testing.T) {
 	rescueStdout := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
-	UpdateSchedule(TrackingId,UpdateScheduleRequest)
+	UpdateSchedule(TrackingId, UpdateScheduleRequest)
 	w.Close()
 	out, _ := ioutil.ReadAll(r)
 	os.Stdout = rescueStdout
@@ -65,7 +65,7 @@ func TestUpdateScheduleFailsWith500(t *testing.T) {
 			return resp, err
 		},
 	)
-	res:=UpdateSchedule(TrackingId,UpdateScheduleRequest)
+	res := UpdateSchedule(TrackingId, UpdateScheduleRequest)
 	assert.EqualErrorf(t, res, "NotificationAPI request failed.", "The log message should be %s, got: %v", "NotificationAPI request failed.", res)
 	assert.Equal(t, httpmock.GetTotalCallCount(), 1, "Error should be: %v, got: %v", 1, httpmock.GetTotalCallCount())
 	httpmock.Deactivate()
@@ -95,7 +95,7 @@ func TestUpdateSchedulePasses(t *testing.T) {
 	rescueStdout := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
-	UpdateSchedule(TrackingId,UpdateScheduleRequest)
+	UpdateSchedule(TrackingId, UpdateScheduleRequest)
 	w.Close()
 	out, _ := ioutil.ReadAll(r)
 	os.Stdout = rescueStdout
