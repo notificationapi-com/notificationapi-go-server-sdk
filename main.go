@@ -85,7 +85,18 @@ type SendRequest struct {
 	MergeTags         map[string]interface{} `json:"mergeTags,omitempty"`
 	Replace           map[string]string      `json:"replace,omitempty"`
 	ForceChannels     []string               `json:"forceChannels,omitempty"`
-	Schedule          *string                `json:"schedule,omitempty"`
+	Schedule          string                `json:"schedule,omitempty"`
+	TemplateID        *string                `json:"templateId,omitempty"`
+	SubNotificationId *string                `json:"subNotificationId,omitempty"`
+	Options           *SendRequestOptions    `json:"options,omitempty"`
+}
+type UpdateScheduleRequest struct {
+	NotificationId    string                 `json:"notificationId,omitempty"`
+	User              User                   `json:"user,omitempty"`
+	MergeTags         map[string]interface{} `json:"mergeTags,omitempty"`
+	Replace           map[string]string      `json:"replace,omitempty"`
+	ForceChannels     []string               `json:"forceChannels,omitempty"`
+	Schedule          string                `json:"schedule,omitempty"`
 	TemplateID        *string                `json:"templateId,omitempty"`
 	SubNotificationId *string                `json:"subNotificationId,omitempty"`
 	Options           *SendRequestOptions    `json:"options,omitempty"`
@@ -194,7 +205,18 @@ func CreateSubNotification(params CreateSubNotificationRequest) error {
 	}
 	return request(c, http.MethodPut, "notifications/"+params.NotificationId+"/subNotifications/"+params.SubNotificationId, bytes.NewBuffer(createSubNotificationRequest))
 }
-
+func UpdateSchedule(TrackingId string, UpdateScheduleRequest UpdateScheduleRequest) error {
+	c := httpClient()
+	updateScheduleRequest, err := json.Marshal(UpdateScheduleRequest)
+	if err != nil {
+		log.Fatalf("Couldn't parse response body. %+v", err)
+	}
+	return request(c, http.MethodPatch, "schedule/"+TrackingId, bytes.NewBuffer(updateScheduleRequest))
+}
+func DeleteSchedule(TrackingId string) error {
+	c := httpClient()
+	return request(c, http.MethodDelete, "schedule/"+TrackingId, bytes.NewBuffer(nil))
+}
 func DeleteSubNotification(params DeleteSubNotificationRequest) error {
 	c := httpClient()
 	return request(c, http.MethodDelete, "notifications/"+params.NotificationId+"/subNotifications/"+params.SubNotificationId, bytes.NewBuffer(nil))
