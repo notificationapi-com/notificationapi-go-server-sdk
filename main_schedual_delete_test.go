@@ -1,7 +1,6 @@
 package NotificationAPI
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -11,21 +10,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSendPassesWith202(t *testing.T) {
-	Init(client_id, client_secret)
-	params := SendRequest{NotificationId: "baaz"}
+func TestDeleteSchedulePassesWith202(t *testing.T) {
 
-	jsonData, _ := json.Marshal(params)
+	Init(client_id, client_secret)
+	TrackingId := "TrackingId"
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("POST", "https://api.notificationapi.com/client_id/sender",
+	httpmock.RegisterResponder("DELETE", "https://api.notificationapi.com/client_id/schedule/"+TrackingId,
 		func(req *http.Request) (*http.Response, error) {
-			b, err := ioutil.ReadAll(req.Body)
-			if err != nil {
-				panic(err)
-			}
-			assert.Equal(t, b, jsonData)
 			resp, err := httpmock.NewJsonResponse(202, map[string]interface{}{
 				"value": "fixed",
 			})
@@ -36,7 +29,7 @@ func TestSendPassesWith202(t *testing.T) {
 	rescueStdout := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
-	Send(params)
+	DeleteSchedule(TrackingId)
 	w.Close()
 	out, _ := ioutil.ReadAll(r)
 	os.Stdout = rescueStdout
@@ -44,55 +37,35 @@ func TestSendPassesWith202(t *testing.T) {
 	assert.Equal(t, httpmock.GetTotalCallCount(), 1, "Error should be: %v, got: %v", 1, httpmock.GetTotalCallCount())
 	httpmock.Deactivate()
 }
-func TestSendFailsWith500(t *testing.T) {
+func TestDeleteScheduleFailsWith500(t *testing.T) {
 	Init(client_id, client_secret)
-	params := SendRequest{NotificationId: "baz"}
-	jsonData, _ := json.Marshal(params)
+	TrackingId := "TrackingId"
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("POST", "https://api.notificationapi.com/client_id/sender",
+	httpmock.RegisterResponder("DELETE", "https://api.notificationapi.com/client_id/schedule/"+TrackingId,
 		func(req *http.Request) (*http.Response, error) {
-			b, err := ioutil.ReadAll(req.Body)
-			if err != nil {
-				panic(err)
-			}
-			assert.Equal(t, b, jsonData)
 			resp, err := httpmock.NewJsonResponse(500, map[string]interface{}{
 				"value": "fixed",
 			})
 			return resp, err
 		},
 	)
-	res := Send(params)
+	res := DeleteSchedule(TrackingId)
 	assert.EqualErrorf(t, res, "NotificationAPI request failed.", "The log message should be %s, got: %v", "NotificationAPI request failed.", res)
 	assert.Equal(t, httpmock.GetTotalCallCount(), 1, "Error should be: %v, got: %v", 1, httpmock.GetTotalCallCount())
 	httpmock.Deactivate()
 }
-func TestSendPasses(t *testing.T) {
-	Init(client_id, client_secret)
-	orders := []interface{}{
-		map[string]string{"id": "123", "productName": "hasan"},
-		map[string]string{"id": "124", "productName": "socks"},
-	}
+func TestDeleteSchedulePasses(t *testing.T) {
 
-	mergeTags := map[string]interface{}{
-		"firstName": "Jane",
-		"lastName":  "Doe",
-		"orders":    orders,
-	}
-	params := SendRequest{NotificationId: "baz", User: User{Id: "asd"}, MergeTags: mergeTags}
-	jsonData, _ := json.Marshal(params)
+	Init(client_id, client_secret)
+	TrackingId := "TrackingId"
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("POST", "https://api.notificationapi.com/client_id/sender",
+	httpmock.RegisterResponder("DELETE", "https://api.notificationapi.com/client_id/schedule/"+TrackingId,
 		func(req *http.Request) (*http.Response, error) {
-			b, err := ioutil.ReadAll(req.Body)
-			if err != nil {
-				panic(err)
-			}
-			assert.Equal(t, b, jsonData)
+
 			resp, err := httpmock.NewJsonResponse(200, map[string]interface{}{
 				"value": "fixed",
 			})
@@ -103,7 +76,7 @@ func TestSendPasses(t *testing.T) {
 	rescueStdout := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
-	Send(params)
+	DeleteSchedule(TrackingId)
 	w.Close()
 	out, _ := ioutil.ReadAll(r)
 	os.Stdout = rescueStdout

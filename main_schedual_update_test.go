@@ -11,15 +11,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSendPassesWith202(t *testing.T) {
+func TestUpdateSchedulePassesWith202(t *testing.T) {
 	Init(client_id, client_secret)
-	params := SendRequest{NotificationId: "baaz"}
-
-	jsonData, _ := json.Marshal(params)
+	TrackingId := "TrackingId"
+	UpdateScheduleRequest := UpdateScheduleRequest{NotificationId: "baaz", Schedule: "2024-02-20T14:38:03.509Z"}
+	jsonData, _ := json.Marshal(UpdateScheduleRequest)
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("POST", "https://api.notificationapi.com/client_id/sender",
+	httpmock.RegisterResponder("PATCH", "https://api.notificationapi.com/client_id/"+"schedule/"+TrackingId,
 		func(req *http.Request) (*http.Response, error) {
 			b, err := ioutil.ReadAll(req.Body)
 			if err != nil {
@@ -36,7 +36,7 @@ func TestSendPassesWith202(t *testing.T) {
 	rescueStdout := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
-	Send(params)
+	UpdateSchedule(TrackingId, UpdateScheduleRequest)
 	w.Close()
 	out, _ := ioutil.ReadAll(r)
 	os.Stdout = rescueStdout
@@ -44,14 +44,15 @@ func TestSendPassesWith202(t *testing.T) {
 	assert.Equal(t, httpmock.GetTotalCallCount(), 1, "Error should be: %v, got: %v", 1, httpmock.GetTotalCallCount())
 	httpmock.Deactivate()
 }
-func TestSendFailsWith500(t *testing.T) {
+func TestUpdateScheduleFailsWith500(t *testing.T) {
 	Init(client_id, client_secret)
-	params := SendRequest{NotificationId: "baz"}
-	jsonData, _ := json.Marshal(params)
+	TrackingId := "TrackingId"
+	UpdateScheduleRequest := UpdateScheduleRequest{NotificationId: "baaz", Schedule: "2024-02-20T14:38:03.509Z"}
+	jsonData, _ := json.Marshal(UpdateScheduleRequest)
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("POST", "https://api.notificationapi.com/client_id/sender",
+	httpmock.RegisterResponder("PATCH", "https://api.notificationapi.com/client_id/"+"schedule/"+TrackingId,
 		func(req *http.Request) (*http.Response, error) {
 			b, err := ioutil.ReadAll(req.Body)
 			if err != nil {
@@ -64,29 +65,20 @@ func TestSendFailsWith500(t *testing.T) {
 			return resp, err
 		},
 	)
-	res := Send(params)
+	res := UpdateSchedule(TrackingId, UpdateScheduleRequest)
 	assert.EqualErrorf(t, res, "NotificationAPI request failed.", "The log message should be %s, got: %v", "NotificationAPI request failed.", res)
 	assert.Equal(t, httpmock.GetTotalCallCount(), 1, "Error should be: %v, got: %v", 1, httpmock.GetTotalCallCount())
 	httpmock.Deactivate()
 }
-func TestSendPasses(t *testing.T) {
+func TestUpdateSchedulePasses(t *testing.T) {
 	Init(client_id, client_secret)
-	orders := []interface{}{
-		map[string]string{"id": "123", "productName": "hasan"},
-		map[string]string{"id": "124", "productName": "socks"},
-	}
-
-	mergeTags := map[string]interface{}{
-		"firstName": "Jane",
-		"lastName":  "Doe",
-		"orders":    orders,
-	}
-	params := SendRequest{NotificationId: "baz", User: User{Id: "asd"}, MergeTags: mergeTags}
-	jsonData, _ := json.Marshal(params)
+	TrackingId := "TrackingId"
+	UpdateScheduleRequest := UpdateScheduleRequest{NotificationId: "baaz", Schedule: "2024-02-20T14:38:03.509Z"}
+	jsonData, _ := json.Marshal(UpdateScheduleRequest)
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("POST", "https://api.notificationapi.com/client_id/sender",
+	httpmock.RegisterResponder("PATCH", "https://api.notificationapi.com/client_id/"+"schedule/"+TrackingId,
 		func(req *http.Request) (*http.Response, error) {
 			b, err := ioutil.ReadAll(req.Body)
 			if err != nil {
@@ -103,7 +95,7 @@ func TestSendPasses(t *testing.T) {
 	rescueStdout := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
-	Send(params)
+	UpdateSchedule(TrackingId, UpdateScheduleRequest)
 	w.Close()
 	out, _ := ioutil.ReadAll(r)
 	os.Stdout = rescueStdout
