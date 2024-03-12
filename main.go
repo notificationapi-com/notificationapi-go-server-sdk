@@ -92,7 +92,7 @@ type SendRequest struct {
 }
 type UpdateScheduleRequest struct {
 	NotificationId    string                 `json:"notificationId,omitempty"`
-	User              User                   `json:"user,omitempty"`
+	User              *User                   `json:"user,omitempty"`
 	MergeTags         map[string]interface{} `json:"mergeTags,omitempty"`
 	Replace           map[string]string      `json:"replace,omitempty"`
 	ForceChannels     []string               `json:"forceChannels,omitempty"`

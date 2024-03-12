@@ -11,11 +11,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type ExpectedUpdateScheduleRequestJsonData struct {
+	NotificationId string `json:"notificationId"`
+	Schedule       string `json:"schedule"`
+}
+
 func TestUpdateSchedulePassesWith202(t *testing.T) {
 	Init(client_id, client_secret)
 	TrackingId := "TrackingId"
 	UpdateScheduleRequest := UpdateScheduleRequest{NotificationId: "baaz", Schedule: "2024-02-20T14:38:03.509Z"}
-	jsonData, _ := json.Marshal(UpdateScheduleRequest)
+	jsonData, _ := json.Marshal(ExpectedUpdateScheduleRequestJsonData{NotificationId: "baaz", Schedule: "2024-02-20T14:38:03.509Z"})
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
@@ -48,7 +53,7 @@ func TestUpdateScheduleFailsWith500(t *testing.T) {
 	Init(client_id, client_secret)
 	TrackingId := "TrackingId"
 	UpdateScheduleRequest := UpdateScheduleRequest{NotificationId: "baaz", Schedule: "2024-02-20T14:38:03.509Z"}
-	jsonData, _ := json.Marshal(UpdateScheduleRequest)
+	jsonData, _ := json.Marshal(ExpectedUpdateScheduleRequestJsonData{NotificationId: "baaz", Schedule: "2024-02-20T14:38:03.509Z"})
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
@@ -74,7 +79,7 @@ func TestUpdateSchedulePasses(t *testing.T) {
 	Init(client_id, client_secret)
 	TrackingId := "TrackingId"
 	UpdateScheduleRequest := UpdateScheduleRequest{NotificationId: "baaz", Schedule: "2024-02-20T14:38:03.509Z"}
-	jsonData, _ := json.Marshal(UpdateScheduleRequest)
+	jsonData, _ := json.Marshal(ExpectedUpdateScheduleRequestJsonData{NotificationId: "baaz", Schedule: "2024-02-20T14:38:03.509Z"})
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
