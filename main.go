@@ -24,6 +24,8 @@ type SendRequestEmailOptions struct {
 	ReplyToAddresses []string           `json:"replyToAddresses,omitempty"`
 	CcAddresses      []string           `json:"ccAddresses,omitempty"`
 	BccAddresses     []string           `json:"bccAddresses,omitempty"`
+	FromName		 string				`json:"fromName,omitempty"`
+	FromAddress		 string				`json:"fromAddress,omitempty"`
 	Attachments      []EmailAttachments `json:"attachments,omitempty"`
 }
 type SendRequestApnOptions struct {
