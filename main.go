@@ -24,8 +24,8 @@ type SendRequestEmailOptions struct {
 	ReplyToAddresses []string           `json:"replyToAddresses,omitempty"`
 	CcAddresses      []string           `json:"ccAddresses,omitempty"`
 	BccAddresses     []string           `json:"bccAddresses,omitempty"`
-	FromName		 string				`json:"fromName,omitempty"`
-	FromAddress		 string				`json:"fromAddress,omitempty"`
+	FromName         string             `json:"fromName,omitempty"`
+	FromAddress      string             `json:"fromAddress,omitempty"`
 	Attachments      []EmailAttachments `json:"attachments,omitempty"`
 }
 type SendRequestApnOptions struct {
@@ -94,7 +94,7 @@ type SendRequest struct {
 }
 type UpdateScheduleRequest struct {
 	NotificationId    string                 `json:"notificationId,omitempty"`
-	User              *User                   `json:"user,omitempty"`
+	User              *User                  `json:"user,omitempty"`
 	MergeTags         map[string]interface{} `json:"mergeTags,omitempty"`
 	Replace           map[string]string      `json:"replace,omitempty"`
 	ForceChannels     []string               `json:"forceChannels,omitempty"`
