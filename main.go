@@ -119,8 +119,8 @@ type DeleteSubNotificationRequest struct {
 type SetUserPreferencesRequest struct {
 	NotificationId    string `json:"notificationId,omitempty"`
 	Channel           string `json:"channel,omitempty"`
-	State             bool   `json:"state,omitempty"`
 	SubNotificationId string `json:"subNotificationId,omitempty"`
+	Delivery          string `json:"delivery,omitempty"`
 }
 type UserData struct {
 	Email      *string          `json:"email,omitempty"`

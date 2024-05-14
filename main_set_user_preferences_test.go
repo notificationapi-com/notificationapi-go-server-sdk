@@ -13,7 +13,7 @@ import (
 
 func TestSetUserPreferencesPassesWith202(t *testing.T) {
 	Init(client_id, client_secret)
-	params := []SetUserPreferencesRequest{{NotificationId: "baaz", Channel: "EMAIL", State: true, SubNotificationId: "123"}}
+	params := []SetUserPreferencesRequest{{NotificationId: "baaz", Channel: "EMAIL", SubNotificationId: "123", Delivery: "weekly"}}
 	userId := "123"
 	jsonData, _ := json.Marshal(params)
 	httpmock.Activate()
@@ -46,7 +46,7 @@ func TestSetUserPreferencesPassesWith202(t *testing.T) {
 }
 func TestSetUserPreferencesFailsWith500(t *testing.T) {
 	Init(client_id, client_secret)
-	params := []SetUserPreferencesRequest{{NotificationId: "baaz", Channel: "EMAIL", State: true, SubNotificationId: "123"}}
+	params := []SetUserPreferencesRequest{{NotificationId: "baaz", Channel: "EMAIL", SubNotificationId: "123", Delivery: "weekly"}}
 	userId := "13"
 	jsonData, _ := json.Marshal(params)
 	httpmock.Activate()
@@ -72,7 +72,7 @@ func TestSetUserPreferencesFailsWith500(t *testing.T) {
 }
 func TestSetUserPreferencesPasses(t *testing.T) {
 	Init(client_id, client_secret)
-	params := []SetUserPreferencesRequest{{NotificationId: "baaz", Channel: "EMAIL", State: true, SubNotificationId: "123"}}
+	params := []SetUserPreferencesRequest{{NotificationId: "baaz", Channel: "EMAIL", SubNotificationId: "123", Delivery: "weekly"}}
 	userId := "13"
 	jsonData, _ := json.Marshal(params)
 	httpmock.Activate()
