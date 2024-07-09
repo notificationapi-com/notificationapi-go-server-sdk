@@ -128,6 +128,23 @@ type UserData struct {
 	PushTokens *[]UserPushToken `json:"pushTokens,omitempty"`
 }
 
+type QueryLogsRequest struct {
+	DateRangeFilter    *DateRangeFilter `json:"dateRangeFilter,omitempty"`
+	NotificationFilter []string         `json:"notificationFilter,omitempty"`
+	ChannelFilter      []string         `json:"channelFilter,omitempty"`
+	UserFilter         []string         `json:"userFilter,omitempty"`
+	StatusFilter       []string         `json:"statusFilter,omitempty"`
+	TrackingIds        []string         `json:"trackingIds,omitempty"`
+	RequestFilter      []string         `json:"requestFilter,omitempty"`
+	EnvIdFilter        []string         `json:"envIdFilter,omitempty"`
+	CustomFilter       *string          `json:"customFilter,omitempty"`
+}
+
+type DateRangeFilter struct {
+	StartTime int64 `json:"startTime,omitempty"`
+	EndTime   int64 `json:"endTime,omitempty"`
+}
+
 func Init(client_id, client_secret string) error {
 	if client_id == "" {
 		return errors.New("Bad client_id")
@@ -255,4 +272,15 @@ func IdentifyUser(user User) error {
 	// Use the updated request function with custom authorization
 	client := httpClient()
 	return request(client, "POST", "users/"+url.QueryEscape(user.Id), bytes.NewBuffer(data), customAuth)
+}
+
+func QueryLogs(params QueryLogsRequest) error {
+	c := httpClient()
+
+	queryLogsRequest, err := json.Marshal(params)
+	if err != nil {
+		log.Fatalf("Couldn't parse request body. %+v", err)
+	}
+
+	return request(c, http.MethodPost, "logs/query", bytes.NewBuffer(queryLogsRequest))
 }
