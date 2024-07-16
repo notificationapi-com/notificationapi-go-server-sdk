@@ -12,22 +12,23 @@ import (
 )
 
 func TestUpdateInAppNotificationPassesWith202(t *testing.T) {
-	userId := "123"
+	Init(client_id, client_secret)
 	params := InAppNotificationPatchRequest{
-		TrackingIds: []string{"testTrackingId"},
-		Opened:      stringPtr("1970-01-01T00:00:00.000Z"),
-		Clicked:     stringPtr("1970-01-01T00:00:00.000Z"),
-		Archived:    stringPtr("1970-01-01T00:00:00.000Z"),
-		Actioned1:   stringPtr("1970-01-01T00:00:00.000Z"),
-		Actioned2:   stringPtr("1970-01-01T00:00:00.000Z"),
+		TrackingIds: []string{"track123"},
+		Opened:      stringPtr("2024-07-16T08:00:00Z"),
+		Clicked:     stringPtr("2024-07-16T08:05:00Z"),
+		Archived:    stringPtr("2024-07-16T09:00:00Z"),
+		Actioned1:   stringPtr("Action1"),
+		Actioned2:   stringPtr("Action2"),
 		Reply: &struct {
 			Date    string `json:"date"`
 			Message string `json:"message"`
 		}{
-			Date:    "1970-01-01T00:00:00.000Z",
-			Message: "nice!",
+			Date:    "2024-07-16T10:00:00Z",
+			Message: "Test reply message",
 		},
 	}
+	userId := "123"
 	jsonData, _ := json.Marshal(params)
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
@@ -59,22 +60,23 @@ func TestUpdateInAppNotificationPassesWith202(t *testing.T) {
 }
 
 func TestUpdateInAppNotificationFailsWith500(t *testing.T) {
-	userId := "13"
+	Init(client_id, client_secret)
 	params := InAppNotificationPatchRequest{
-		TrackingIds: []string{"testTrackingId"},
-		Opened:      stringPtr("1970-01-01T00:00:00.000Z"),
-		Clicked:     stringPtr("1970-01-01T00:00:00.000Z"),
-		Archived:    stringPtr("1970-01-01T00:00:00.000Z"),
-		Actioned1:   stringPtr("1970-01-01T00:00:00.000Z"),
-		Actioned2:   stringPtr("1970-01-01T00:00:00.000Z"),
+		TrackingIds: []string{"track123"},
+		Opened:      stringPtr("2024-07-16T08:00:00Z"),
+		Clicked:     stringPtr("2024-07-16T08:05:00Z"),
+		Archived:    stringPtr("2024-07-16T09:00:00Z"),
+		Actioned1:   stringPtr("Action1"),
+		Actioned2:   stringPtr("Action2"),
 		Reply: &struct {
 			Date    string `json:"date"`
 			Message string `json:"message"`
 		}{
-			Date:    "1970-01-01T00:00:00.000Z",
-			Message: "nice!",
+			Date:    "2024-07-16T10:00:00Z",
+			Message: "Test reply message",
 		},
 	}
+	userId := "13"
 	jsonData, _ := json.Marshal(params)
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
@@ -99,22 +101,23 @@ func TestUpdateInAppNotificationFailsWith500(t *testing.T) {
 }
 
 func TestUpdateInAppNotificationPasses(t *testing.T) {
-	userId := "13"
+	Init(client_id, client_secret)
 	params := InAppNotificationPatchRequest{
-		TrackingIds: []string{"testTrackingId"},
-		Opened:      stringPtr("1970-01-01T00:00:00.000Z"),
-		Clicked:     stringPtr("1970-01-01T00:00:00.000Z"),
-		Archived:    stringPtr("1970-01-01T00:00:00.000Z"),
-		Actioned1:   stringPtr("1970-01-01T00:00:00.000Z"),
-		Actioned2:   stringPtr("1970-01-01T00:00:00.000Z"),
+		TrackingIds: []string{"track123"},
+		Opened:      stringPtr("2024-07-16T08:00:00Z"),
+		Clicked:     stringPtr("2024-07-16T08:05:00Z"),
+		Archived:    stringPtr("2024-07-16T09:00:00Z"),
+		Actioned1:   stringPtr("Action1"),
+		Actioned2:   stringPtr("Action2"),
 		Reply: &struct {
 			Date    string `json:"date"`
 			Message string `json:"message"`
 		}{
-			Date:    "1970-01-01T00:00:00.000Z",
-			Message: "nice!",
+			Date:    "2024-07-16T10:00:00Z",
+			Message: "Test reply message",
 		},
 	}
+	userId := "13"
 	jsonData, _ := json.Marshal(params)
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
@@ -145,6 +148,7 @@ func TestUpdateInAppNotificationPasses(t *testing.T) {
 	httpmock.Deactivate()
 }
 
+// Helper function to get a pointer to a string
 func stringPtr(s string) *string {
 	return &s
 }
