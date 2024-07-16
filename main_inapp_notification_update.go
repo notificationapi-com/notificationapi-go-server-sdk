@@ -10,9 +10,10 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 )
-
+var client_id1 = "client_id"
+var client_secret1 = "client_secret"
 func TestUpdateInAppNotificationPassesWith202(t *testing.T) {
-	Init(client_id, client_secret)
+	Init(client_id1, client_secret1)
 	userId := "123"
 	params := InAppNotificationPatchRequest{
 		TrackingIds: []string{"testTrackingId"},
@@ -60,7 +61,7 @@ func TestUpdateInAppNotificationPassesWith202(t *testing.T) {
 }
 
 func TestUpdateInAppNotificationFailsWith500(t *testing.T) {
-	Init(client_id, client_secret)
+	Init(client_id1, client_secret1)
 	userId := "13"
 	params := InAppNotificationPatchRequest{
 		TrackingIds: []string{"testTrackingId"},
@@ -101,7 +102,7 @@ func TestUpdateInAppNotificationFailsWith500(t *testing.T) {
 }
 
 func TestUpdateInAppNotificationPasses(t *testing.T) {
-	Init(client_id, client_secret)
+	Init(client_id1, client_secret1)
 	userId := "13"
 	params := InAppNotificationPatchRequest{
 		TrackingIds: []string{"testTrackingId"},
