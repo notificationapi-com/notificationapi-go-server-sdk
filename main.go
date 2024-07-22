@@ -145,6 +145,19 @@ type DateRangeFilter struct {
 	EndTime   int64 `json:"endTime,omitempty"`
 }
 
+type InAppNotificationPatchRequest struct {
+	TrackingIds []string `json:"trackingIds"`
+	Opened      *string  `json:"opened,omitempty"`
+	Clicked     *string  `json:"clicked,omitempty"`
+	Archived    *string  `json:"archived,omitempty"`
+	Actioned1   *string  `json:"actioned1,omitempty"`
+	Actioned2   *string  `json:"actioned2,omitempty"`
+	Reply       *struct {
+		Date    string `json:"date"`
+		Message string `json:"message"`
+	} `json:"reply,omitempty"`
+}
+
 func Init(client_id, client_secret string) error {
 	if client_id == "" {
 		return errors.New("Bad client_id")
@@ -283,4 +296,44 @@ func QueryLogs(params QueryLogsRequest) error {
 	}
 
 	return request(c, http.MethodPost, "logs/query", bytes.NewBuffer(queryLogsRequest))
+}
+
+// DeleteUserPreferences deletes any stored preferences for a user and notificationId or subNotificationId
+func DeleteUserPreferences(userId string, notificationId string, subNotificationId ...string) error {
+	h := hmac.New(sha256.New, []byte(__client_secret))
+	h.Write([]byte(userId))
+	hashedUserID := base64.StdEncoding.EncodeToString(h.Sum(nil))
+
+	// Construct custom authorization header
+	customAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s:%s", __client_id, userId, hashedUserID)))
+
+	params := map[string]string{"notificationId": notificationId}
+	if len(subNotificationId) > 0 {
+		params["subNotificationId"] = subNotificationId[0]
+	}
+	queryParams, err := json.Marshal(params)
+	if err != nil {
+		return fmt.Errorf("error marshalling query params: %w", err)
+	}
+
+	client := httpClient()
+	return request(client, "DELETE", "users/"+url.QueryEscape(userId)+"/preferences", bytes.NewBuffer(queryParams), customAuth)
+}
+
+// UpdateInAppNotification updates the status of an in-app notification
+func UpdateInAppNotification(userId string, params InAppNotificationPatchRequest) error {
+	h := hmac.New(sha256.New, []byte(__client_secret))
+	h.Write([]byte(userId))
+	hashedUserID := base64.StdEncoding.EncodeToString(h.Sum(nil))
+
+	// Construct custom authorization header
+	customAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s:%s", __client_id, userId, hashedUserID)))
+
+	data, err := json.Marshal(params)
+	if err != nil {
+		return fmt.Errorf("error marshalling params: %w", err)
+	}
+
+	client := httpClient()
+	return request(client, "PATCH", "users/"+url.QueryEscape(userId)+"/notifications/INAPP_WEB", bytes.NewBuffer(data), customAuth)
 }
